@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import prisma from '../libs/prisma';
 import response from "../utils/response";
 import { registerDTO } from "../validations/user.validation";
-import { UserRole } from "../generated/prisma/enums";
+import { UserRole } from "@prisma/client";
 import { hashPassword } from "../utils/bcrypt";
 
 const authController = {
