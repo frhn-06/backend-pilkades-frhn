@@ -15,5 +15,10 @@ const registerDTO = zod.object({
     path: ["confirmPassword"]
 })
 
+const loginDTO = zod.object({
+    identifier: z.string(),
+    password: z.string()
+})
 
-export {registerDTO}
+
+export {registerDTO, loginDTO}
