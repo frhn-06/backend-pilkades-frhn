@@ -25,6 +25,8 @@ const response = {
                 }
             })
         }
+
+
         
         if(error instanceof PrismaClientKnownRequestError) {
             switch(error.code) {
@@ -37,9 +39,9 @@ const response = {
                     })
                 
                 default:
-                    return res.status(409).json({
+                    return res.status(500).json({
                         meta: {
-                            status: 409,
+                            status: 500,
                             message: "Error database" 
                         }
                     })
