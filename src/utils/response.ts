@@ -73,7 +73,16 @@ const response = {
         return res.status(401).json({
             meta: {
                 status: 401,
-                message: "unauthorized"
+                message: "Unauthorized"
+            }
+        })
+    },
+
+    forbidden: (res: Response) => {
+        return res.status(403).json({
+            meta: {
+                status: 403,
+                message: "Forbidden"
             }
         })
     }

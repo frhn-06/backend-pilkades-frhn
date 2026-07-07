@@ -5,6 +5,7 @@ import { loginDTO, registerDTO } from "../validations/user.validation";
 import { UserRole } from "@prisma/client";
 import { comparePassword, hashPassword } from "../utils/bcrypt";
 import { signIn } from "../utils/jwt";
+import { IReqUser } from "../types/user";
 
 const authController = {
     register: async(req:Request, res:Response) => {
@@ -59,7 +60,8 @@ const authController = {
 
             const token = signIn({
                 id: user.id,
-                role: user.role
+                role: user.role,
+                tpsId: user.tpsId
             });
 
             response.success(res, token, "Login berhasil")
@@ -68,7 +70,24 @@ const authController = {
         }
     },
 
+    FindMeByToken: async(req:IReqUser, res:Response) => {
+        try{
+            const userId = req.user?.id;
+            if(!userId) return response.unauthorize(res);
 
+            const result = await prisma.user.findUnique({
+                where: {
+                    id: userId
+                }
+            });
+
+            if(!result) return response.notFound(res, "User tidak ditemukan");
+
+            response.success(res, result, "Berhasil mengambil data user")
+        }catch(error) {
+            response.error(res, error, "Gagal mengambil data user")
+        }
+    }
 }
 
 export default authController;
