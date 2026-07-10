@@ -19,6 +19,7 @@ router.get("/auth/me", [authMiddleware], authController.FindMeByToken);
 
 router.post("/tps", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.create);
 
+router.get("/all-tps", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.findAll);
 
 router.get("/tps/:id/admin", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.findByIdForAdmin);
 

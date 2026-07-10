@@ -8,6 +8,9 @@ import { isValid } from "zod/v3";
 const tpsController = {
     create: async(req:IReqUser, res:Response) => {
         try{
+            const userId = req.user?.id;
+            if(!userId) return response.notFound(res, "User not found");
+
             const validate = tpsDTO.parse(req.body);
             
             const result = await prisma.tps.create({
@@ -27,14 +30,22 @@ const tpsController = {
 
     findAll: async(req:IReqUser, res: Response) => {
         try{
+            const userId = req.user?.id;
+            if(!userId) return response.notFound(res, "User not found");
 
+            const result = await prisma.tps.findMany();
+            
+            response.success(res, result, "Berhasil mengakses semua TPS");
         }catch(error) {
-
+            response.error(res, error, "Gagal mengakses semua TPS");
         }
     },
 
     findByIdForAdmin: async(req:IReqUser, res: Response) => {
         try{
+            const userId = req.user?.id;
+            if(!userId) return response.notFound(res, "User not found");
+
             const {id} = req.params;
             if(!id) return response.notFound(res, "TPS tidak ditemukan");
 
