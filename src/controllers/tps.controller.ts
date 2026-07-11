@@ -33,7 +33,11 @@ const tpsController = {
             const userId = req.user?.id;
             if(!userId) return response.notFound(res, "User not found");
 
-            const result = await prisma.tps.findMany();
+            const result = await prisma.tps.findMany({
+                orderBy: {
+                    name: "asc"
+                }
+            });
             
             response.success(res, result, "Berhasil mengakses semua TPS");
         }catch(error) {
