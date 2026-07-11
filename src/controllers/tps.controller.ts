@@ -110,6 +110,32 @@ const tpsController = {
         }catch(error) {
             response.error(res, error, "Gagal mengubah data TPS")
         }
+    },
+
+    delete: async(req:IReqUser, res:Response) => {
+        try {
+            const userId = req.user?.id;
+            if(!userId) return response.unauthorize(res);
+
+            const role = req.user?.role;
+            if(role !== "SUPER_ADMIN") return response.forbidden(res);
+
+            const {id} = req.params;;
+            if(!id) return response.notFound(res, "TPS tidak ditemukan");
+            if(!/\d/.test(id)) return response.notFound(res, "TPS tidak ditemukan");
+
+            const result = await prisma.tps.delete({
+                where: {
+                    id: Number(id)
+                }
+            });
+
+            if(!result) return response.notFound(res, "TPS tidak ditemukan");
+
+            response.success(res, result, "Berhasil menghapus data TPS");
+        }catch(error) {
+            response.error(res, error, "Gagal menghapus data TPS")
+        }
     }
 }
 

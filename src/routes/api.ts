@@ -25,7 +25,9 @@ router.get("/tps/:id/admin", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], t
 
 router.get("/tps/petugas", [authMiddleware, aclMiddleware(["PETUGAS"])], tpsController.findByPetugas);
 
-router.patch("/tps/:id/update", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.update);
+router.patch("/tps/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.update);
+
+router.delete("/tps/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.delete);
 
 
 
