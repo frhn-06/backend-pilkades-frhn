@@ -81,6 +81,36 @@ const tpsController = {
             response.error(res, error, "Gagal mengakses TPS")
         }
     },
+
+    update: async(req:IReqUser, res:Response) => {
+        try {
+            const userId = req.user?.id;
+            if(!userId) return response.unauthorize(res);
+
+            const role = req.user?.role;
+            if(role !== "SUPER_ADMIN") return response.forbidden(res);
+
+            const {id} = req.params;;
+            if(!id) return response.notFound(res, "TPS tidak ditemukan");
+            if(!/\d/.test(id)) return response.notFound(res, "TPS tidak ditemukan");
+
+            const result = await prisma.tps.update({
+                where: {
+                    id: Number(id)
+                },
+                data: {
+                    ...req.body
+                }
+            });
+
+            if(!result) return response.notFound(res, "TPS tidak ditemukan");
+
+            response.success(res, result, "Berhasil mengubah data TPS");
+            
+        }catch(error) {
+            response.error(res, error, "Gagal mengubah data TPS")
+        }
+    }
 }
 
 

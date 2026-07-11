@@ -38,6 +38,14 @@ const response = {
                         }
                     })
                 
+                case "P2025" :
+                    return res.status(404).json({
+                        meta: {
+                            status: 404,
+                            message: "Data tidak ditemukan"
+                        }
+                    })
+                    
                 default:
                     return res.status(500).json({
                         meta: {
