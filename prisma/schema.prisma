@@ -31,7 +31,32 @@ model Tps {
   users     User[]
 }
 
+
+model Election {
+  id              Int             @id @default(autoincrement())
+  name            String
+  desa            String
+  kecamatan       String
+  kabupatenKota   String
+  provinsi        String
+  description     String?
+  logo            String?
+  startAt         DateTime
+  endAt           DateTime
+  status          ElectionStatus  @default(DRAFT)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
 enum UserRole {
   SUPER_ADMIN
   PETUGAS
+}
+
+enum ElectionStatus {
+  DRAFT
+  UPCOMMING
+  ONGOING
+  FINISHED
+  CANCELLED
 }

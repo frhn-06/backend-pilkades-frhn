@@ -3,7 +3,6 @@ import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import { tpsDTO } from "../validations/tps.validation";
 import prisma from "../libs/prisma";
-import { isValid } from "zod/v3";
 
 const tpsController = {
     create: async(req:IReqUser, res:Response) => {
