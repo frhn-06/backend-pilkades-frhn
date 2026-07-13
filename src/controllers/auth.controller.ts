@@ -78,6 +78,9 @@ const authController = {
             const result = await prisma.user.findUnique({
                 where: {
                     id: userId
+                },
+                omit: {
+                    password: true
                 }
             });
 
