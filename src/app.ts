@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser';
 import router from './routes/api';
+import errorMiddleware from './middleware/error.middleware';
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.get("/", (req:Request, res:Response) => {
 
 app.use("/api", router);
 
+app.use(errorMiddleware.serverError());
 
 export default app;

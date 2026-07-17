@@ -4,6 +4,8 @@ import authMiddleware from "../middleware/auth.middleware";
 import aclMiddleware from "../middleware/acl.middleware";
 import tpsController from "../controllers/tps.controller";
 import electionController from "../controllers/election.controller";
+import mediaMiddleware from "../middleware/media.middleware";
+import mediaController from "../controllers/media.controller";
 
 const router = express.Router();
 
@@ -40,5 +42,9 @@ router.patch("/tps/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsCo
 router.delete("/tps/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.delete);
 
 
+
+router.post("/media/upload-single", [authMiddleware, aclMiddleware(["SUPER_ADMIN"]), mediaMiddleware.single("file")], mediaController.uploadSingle);
+
+router.delete("/media/delete-single", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], mediaController.removeSingle)
 
 export default router;
