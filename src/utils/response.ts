@@ -93,6 +93,17 @@ const response = {
                 message: "Forbidden"
             }
         })
+    },
+
+    pagination: (res: Response, data: any, pagination: {currentPage: number; totalPage: number; total: number}, message: string) => {
+        return res.status(200).json({
+            meta: {
+                status: 200,
+                message: message
+            },
+            data: data,
+            pagination: pagination
+        })
     }
 }
 

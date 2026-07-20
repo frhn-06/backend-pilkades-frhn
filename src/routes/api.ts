@@ -6,6 +6,7 @@ import tpsController from "../controllers/tps.controller";
 import electionController from "../controllers/election.controller";
 import mediaMiddleware from "../middleware/media.middleware";
 import mediaController from "../controllers/media.controller";
+import petugasController from "../controllers/petugas.controller";
 
 const router = express.Router();
 
@@ -45,6 +46,19 @@ router.delete("/tps/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsC
 
 router.post("/media/upload-single", [authMiddleware, aclMiddleware(["SUPER_ADMIN"]), mediaMiddleware.single("file")], mediaController.uploadSingle);
 
-router.delete("/media/delete-single", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], mediaController.removeSingle)
+router.delete("/media/delete-single", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], mediaController.removeSingle);
+
+
+
+
+router.post("/petugas", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.create);
+
+router.get("/petugas", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.findAll);
+
+router.get("/petugas/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.findOne);
+
+router.patch("/petugas/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.update);
+
+router.delete("/petugas/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.delete);
 
 export default router;

@@ -66,7 +66,7 @@ const electionController = {
             })
 
             response.success(res, result, "Berhasil mengupdate data election")
-        }catch(error) {
+        } catch(error) {
             response.error(res, error, "Gagal mengupdate data election")
         }
     },
