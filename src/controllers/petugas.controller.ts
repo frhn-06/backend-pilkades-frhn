@@ -83,6 +83,15 @@ const petugasController = {
                 skip: (Number(page) - 1) * Number(limit),
                 orderBy: {
                     createdAt: "desc"
+                },
+                include: {
+                    tps: {
+                        select: {
+                            id: true,
+                            name: true,
+                            alamat: true
+                        }
+                    }
                 }
             });
 
