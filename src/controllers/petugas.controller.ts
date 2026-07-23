@@ -82,7 +82,7 @@ const petugasController = {
                 take: Number(limit),
                 skip: (Number(page) - 1) * Number(limit),
                 orderBy: {
-                    createdAt: "desc"
+                    name: "asc"
                 },
                 include: {
                     tps: {
@@ -189,6 +189,34 @@ const petugasController = {
             response.success(res, publicResult, "Berhasil menghapus data petugas");
         } catch(error) {
             response.error(res, error, "Gagal menghapus data petugas");   
+        }
+    },
+
+    nonActive: async(req:IReqUser, res:Response) => {
+        try {
+            const userId = req.user?.id;
+            const role = req.user?.role;
+            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+
+            const {id} = req.params;
+            if(!id) return response.notFound(res, "Petugas tidak ditemukan")
+            
+            const result = await prisma.user.update({
+                where: {
+                    id: Number(id),
+                    role: UserRole.PETUGAS
+                },
+                data: {
+                    isActive: false
+                }
+            })
+
+            const publicResult = publishJson(result);
+
+            response.success(res, publicResult, "Berhasil mengnonaktifkan data petugas");
+
+        } catch (error) {
+            response.error(res, error, "Gagal mengnonaktifkan data petugas");      
         }
     }
 }

@@ -61,4 +61,6 @@ router.patch("/petugas/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], p
 
 router.delete("/petugas/:id", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.delete);
 
+router.patch("/petugas/:id/non-active", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], petugasController.nonActive);
+
 export default router;
