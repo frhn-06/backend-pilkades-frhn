@@ -218,6 +218,34 @@ const petugasController = {
         } catch (error) {
             response.error(res, error, "Gagal mengnonaktifkan data petugas");      
         }
+    },
+
+    active: async(req:IReqUser, res:Response) => {
+        try {
+            const userId = req.user?.id;
+            const role = req.user?.role;
+            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+
+            const {id} = req.params;
+            if(!id) return response.notFound(res, "Petugas tidak ditemukan")
+            
+            const result = await prisma.user.update({
+                where: {
+                    id: Number(id),
+                    role: UserRole.PETUGAS
+                },
+                data: {
+                    isActive: true
+                }
+            })
+
+            const publicResult = publishJson(result);
+
+            response.success(res, publicResult, "Berhasil mengaktifkan data petugas");
+
+        } catch (error) {
+            response.error(res, error, "Gagal mengaktifkan data petugas");      
+        }
     }
 }
 
