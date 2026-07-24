@@ -128,9 +128,7 @@ const petugasController = {
                 return response.notFound(res, "Petugas tidak ditemukan");
             }
 
-            const publicResult = publishJson(result)
-
-            response.success(res, publicResult, "Berhasil mengakses seorang petugas");
+            response.success(res, result, "Berhasil mengakses seorang petugas");
             
 
         }catch(error) {
