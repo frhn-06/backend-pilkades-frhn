@@ -128,7 +128,9 @@ const petugasController = {
                 return response.notFound(res, "Petugas tidak ditemukan");
             }
 
-            response.success(res, result, "Berhasil mengakses seorang petugas");
+            const publicResult = publishJson(result)
+
+            response.success(res, publicResult, "Berhasil mengakses seorang petugas");
             
 
         }catch(error) {
@@ -157,7 +159,9 @@ const petugasController = {
                 data: req.body
             });
 
-            response.success(res, result, "Berhasil mengupdate data petugas");
+            const publicResult = publishJson(result)
+
+            response.success(res, publicResult, "Berhasil mengupdate data petugas");
             
 
         }catch(error) {
