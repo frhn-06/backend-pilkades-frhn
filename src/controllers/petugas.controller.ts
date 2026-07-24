@@ -159,9 +159,7 @@ const petugasController = {
                 data: req.body
             });
 
-            const publicResult = publishJson(result)
-
-            response.success(res, publicResult, "Berhasil mengupdate data petugas");
+            response.success(res, result, "Berhasil mengupdate data petugas");
             
 
         }catch(error) {
