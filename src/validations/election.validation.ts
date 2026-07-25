@@ -1,3 +1,4 @@
+import { ElectionStatus } from '@prisma/client';
 import zod from 'zod';
 
 const electionDTO = zod.object({
@@ -12,4 +13,9 @@ const electionDTO = zod.object({
     description: zod.string().optional()
 })
 
-export {electionDTO};
+
+const statusDTO = zod.object({
+    status: zod.enum(ElectionStatus)
+})
+
+export {electionDTO, statusDTO};

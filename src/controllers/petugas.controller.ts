@@ -10,15 +10,15 @@ import {publishJson, publishManyJson} from "../utils/publishjson";
 const petugasController = {
     create: async(req:IReqUser, res:Response) => {
         try{
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
 
             const validate = petugasDTO.parse(req.body);
 
-            const tps = await prisma.tps.findUnique({
+            const tps = await prisma.tps.findFirst({
                 where: {
-                 id: validate.tpsId
+                 id: validate.tpsId,
+                 electionId: electionId
                 }
             });
 
@@ -31,16 +31,18 @@ const petugasController = {
                 email: validate.email,
                 password:passwordHashed,
                 tpsId: validate.tpsId,
-                role: UserRole.PETUGAS
+                role: UserRole.PETUGAS,
+                electionId: electionId
             }
 
             const result = await prisma.user.create({
-                data: payload
+                data: payload,
+                omit: {
+                    password: true
+                }
             });
 
-            const publicResult = publishJson(result);
-
-            response.success(res, publicResult, "Berhasil mebuat data petugas")
+            response.success(res, result, "Berhasil mebuat data petugas")
         }catch(error) {
             response.error(res, error, "Gagal membuat petugas");
         }
@@ -48,16 +50,16 @@ const petugasController = {
 
     findAll: async(req:IReqUser, res:Response) => {
         try {
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
 
             const {limit = 8, page = 1, tps, active, search} = req.query as {limit:string, page:string, tps: string, active:string, search: string}
 
             const setQuery = ():Prisma.UserWhereInput => {
                 let query :Prisma.UserWhereInput  = {
                     isActive: true,
-                    role: UserRole.PETUGAS
+                    role: UserRole.PETUGAS,
+                    electionId: electionId
                 };
                 if(tps) {
                     query.tpsId = Number(tps)
@@ -92,6 +94,9 @@ const petugasController = {
                             alamat: true
                         }
                     }
+                },
+                omit: {
+                    password: true
                 }
             });
 
@@ -99,9 +104,11 @@ const petugasController = {
                 where: query
             })
 
-            const publicResult = publishManyJson(result)
-
-            response.pagination(res, publicResult, {totalPage: Math.ceil(total / Number(limit)), currentPage: Number(page), total: total}, "Berhasil mengakses petugas")
+            response.pagination(res, result, {
+                    totalPage: Math.ceil(total / Number(limit)), 
+                    currentPage: Number(page), 
+                    total: total
+                }, "Berhasil mengakses petugas")
 
         } catch(error) {
             response.error(res, error, "Gagal mengakses petugas");
@@ -110,9 +117,8 @@ const petugasController = {
 
     findOne: async(req:IReqUser, res:Response) => {
         try{
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat") 
 
             const {id} = req.params;
             if(!id) return response.notFound(res, "Petugas tidak ditemukan");
@@ -120,7 +126,11 @@ const petugasController = {
             const result = await prisma.user.findFirst({
                 where: {
                     id: Number(id),
-                    role: UserRole.PETUGAS
+                    role: UserRole.PETUGAS,
+                    electionId: electionId
+                },
+                omit: {
+                    password: true
                 }
             });
 
@@ -128,9 +138,7 @@ const petugasController = {
                 return response.notFound(res, "Petugas tidak ditemukan");
             }
 
-            const publicResult = publishJson(result)
-
-            response.success(res, publicResult, "Berhasil mengakses seorang petugas");
+            response.success(res, result, "Berhasil mengakses seorang petugas");
             
 
         }catch(error) {
@@ -140,30 +148,31 @@ const petugasController = {
 
     update: async(req:IReqUser, res:Response) => {
         try{
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
 
             const {id} = req.params;
             if(!id) return response.notFound(res, "Petugas tidak ditemukan");
 
             const newPetugasDTO = petugasDTO.partial();
 
-            newPetugasDTO.parse(req.body);
+            const {passsword, ...body} = req.body;
+
+            const validate = newPetugasDTO.parse(body);
 
             const result = await prisma.user.update({
                 where: {
                     id: Number(id),
-                    role: UserRole.PETUGAS
+                    role: UserRole.PETUGAS,
+                    electionId: electionId
                 },
-                data: req.body
+                data: validate,
+                omit: {
+                    password: true
+                }
             });
 
-            const publicResult = publishJson(result)
-
-            response.success(res, publicResult, "Berhasil mengupdate data petugas");
-            
-
+            response.success(res, result, "Berhasil mengupdate data petugas");
         }catch(error) {
             response.error(res, error, "Gagal mengupdate data petugas");
         }
@@ -171,22 +180,23 @@ const petugasController = {
 
     delete: async(req:IReqUser, res:Response) => {
         try {
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
 
             const {id} = req.params;
             if(!id) return response.notFound(res, "Petugas tidak ditemukan");
 
             const result = await prisma.user.delete({
                 where: {
-                    id: Number(id)
+                    id: Number(id),
+                    electionId: electionId
+                },
+                omit: {
+                    password: true
                 }
             });
 
-            const publicResult = publishJson(result)
-
-            response.success(res, publicResult, "Berhasil menghapus data petugas");
+            response.success(res, result, "Berhasil menghapus data petugas");
         } catch(error) {
             response.error(res, error, "Gagal menghapus data petugas");   
         }
@@ -194,9 +204,8 @@ const petugasController = {
 
     nonActive: async(req:IReqUser, res:Response) => {
         try {
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
 
             const {id} = req.params;
             if(!id) return response.notFound(res, "Petugas tidak ditemukan")
@@ -204,16 +213,18 @@ const petugasController = {
             const result = await prisma.user.update({
                 where: {
                     id: Number(id),
-                    role: UserRole.PETUGAS
+                    role: UserRole.PETUGAS,
+                    electionId: electionId
                 },
                 data: {
                     isActive: false
+                },
+                omit: {
+                    password: true
                 }
             })
 
-            const publicResult = publishJson(result);
-
-            response.success(res, publicResult, "Berhasil mengnonaktifkan data petugas");
+            response.success(res, result, "Berhasil mengnonaktifkan data petugas");
 
         } catch (error) {
             response.error(res, error, "Gagal mengnonaktifkan data petugas");      
@@ -222,9 +233,8 @@ const petugasController = {
 
     active: async(req:IReqUser, res:Response) => {
         try {
-            const userId = req.user?.id;
-            const role = req.user?.role;
-            if(!userId || role !== "SUPER_ADMIN") return response.error(res, false, "Unauthorized / Forbidden");
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
 
             const {id} = req.params;
             if(!id) return response.notFound(res, "Petugas tidak ditemukan")
@@ -232,16 +242,18 @@ const petugasController = {
             const result = await prisma.user.update({
                 where: {
                     id: Number(id),
-                    role: UserRole.PETUGAS
+                    role: UserRole.PETUGAS,
+                    electionId: electionId
                 },
                 data: {
                     isActive: true
+                },
+                omit: {
+                    password: true
                 }
             })
 
-            const publicResult = publishJson(result);
-
-            response.success(res, publicResult, "Berhasil mengaktifkan data petugas");
+            response.success(res, result, "Berhasil mengaktifkan data petugas");
 
         } catch (error) {
             response.error(res, error, "Gagal mengaktifkan data petugas");      

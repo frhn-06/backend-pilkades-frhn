@@ -21,18 +21,20 @@ router.get("/auth/me", [authMiddleware], authController.FindMeByToken);
 
 router.post("/election", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.create);
 
-router.get("/election", electionController.findOne);
+router.get("/election", [authMiddleware], electionController.findOne);
 
-router.patch("/election/:id/update",  [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.update);
+router.patch("/election",  [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.update);
 
-router.delete("/election/:id/delete",  [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.delete);
+router.delete("/election",  [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.delete);
+
+router.patch("/election/status",  [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.status);
 
 
 
 
 router.post("/tps", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.create);
 
-router.get("/all-tps", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.findAll);
+router.get("/tps", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.findAll);
 
 router.get("/tps/:id/admin", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], tpsController.findByIdForAdmin);
 

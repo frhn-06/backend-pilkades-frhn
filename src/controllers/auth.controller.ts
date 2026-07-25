@@ -6,18 +6,12 @@ import { UserRole } from "@prisma/client";
 import { comparePassword, hashPassword } from "../utils/bcrypt";
 import { signIn } from "../utils/jwt";
 import { IReqUser } from "../types/user";
+import { publishJson } from "../utils/publishjson";
 
 const authController = {
     register: async(req:Request, res:Response) => {
         try {
             const validate = registerDTO.parse(req.body);
-
-            const userSama = await prisma.user.findFirst({
-                where: {
-                    role: "SUPER_ADMIN"
-                }
-            })
-            if(userSama) return response.error(res, {}, "admin sudah ada");
 
             const passwordHashed = await hashPassword(validate.password);
  
@@ -31,7 +25,8 @@ const authController = {
                 }
             });
 
-            response.success(res, result, "Berhasil Membuat User")
+            const publicResult = publishJson(result)
+            response.success(res, publicResult, "Berhasil Membuat User")
         } catch(error) {
             response.error(res, error, "Gagal Membuat User")
         }
@@ -53,15 +48,16 @@ const authController = {
                     ]
                 }
             });
-            if(!user) return response.error(res, {}, "Nama atau email tidak sesuai");
+            if(!user) return response.error(res, false, "Nama atau email tidak sesuai");
 
             const passwordTrue = await comparePassword(validate.password, user.password);
-            if(!passwordTrue) return response.error(res, {}, "Password salah");
+            if(!passwordTrue) return response.error(res, false, "Password salah");
 
             const token = signIn({
                 id: user.id,
                 role: user.role,
-                tpsId: user.tpsId
+                tpsId: user.tpsId,
+                electionId: user.electionId
             });
 
             response.success(res, token, "Login berhasil")

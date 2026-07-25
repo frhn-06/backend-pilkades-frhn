@@ -7,30 +7,26 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   name           String
-  email          String   @unique
+  email          String     @unique
   password       String
   role           UserRole
   tpsId          Int?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  electionId     Int?
+
   activationCode String?
-  isActive       Boolean  @default(true)
-  tps            Tps?     @relation(fields: [tpsId], references: [id])
-}
+  isActive       Boolean    @default(true)
 
-model Tps {
-  id        Int      @id @default(autoincrement())
-  name      String
-  alamat    String
-  rt        Int
-  rw        Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
+  tps            Tps?       @relation(fields: [tpsId], references: [id])
+  election       Election?  @relation(fields: [electionId], references: [id])
+
+  @@index([electionId, isActive])
+  @@index([electionId])
+}
 
 model Election {
   id              Int             @id @default(autoincrement())
@@ -44,8 +40,52 @@ model Election {
   startAt         DateTime
   endAt           DateTime
   status          ElectionStatus  @default(DRAFT)
+
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+
+  users           User[]
+  tps             Tps[]
+  candidates      Candidate[]
+}
+
+
+model Tps {
+  id          Int      @id @default(autoincrement())
+  name        String
+  alamat      String
+  rt          Int
+  rw          Int
+
+  electionId  Int
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  election    Election @relation(fields: [electionId], references: [id])
+
+  users       User[]
+
+  @@index([electionId])
+}
+
+
+model Candidate {
+  id                Int               @id @default(autoincrement())
+  nomor_urut        Int
+  name              String
+  img               String
+  vision            String
+  mission           String
+  electionId        Int
+  
+  election          Election          @relation(fields: [electionId], references: [id])
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([electionId])
+  @@unique([electionId, nomor_urut])
 }
 
 enum UserRole {
@@ -55,7 +95,7 @@ enum UserRole {
 
 enum ElectionStatus {
   DRAFT
-  UPCOMMING
+  UPCOMING
   ONGOING
   FINISHED
   CANCELLED

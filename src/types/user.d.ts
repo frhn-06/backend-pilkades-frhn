@@ -7,7 +7,7 @@ interface IUser extends User {
 
 }
 
-interface IUserToken extends Omit<IUser, "name" | "email" | "password" | "isActive" | "activationCode" | "createdAt" | "updatedAt"> {
+interface IUserToken extends Omit<IUser, "name" | "email" | "password" | "isActive" | "activationCode" | "createdAt" | "updatedAt" > {
     id: number;
 }
 

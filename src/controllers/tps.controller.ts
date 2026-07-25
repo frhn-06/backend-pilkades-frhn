@@ -10,6 +10,9 @@ const tpsController = {
             const userId = req.user?.id;
             if(!userId) return response.notFound(res, "User not found");
 
+            const electionId = req.user?.electionId;
+            if(!electionId || electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat");
+
             const validate = tpsDTO.parse(req.body);
             
             const result = await prisma.tps.create({
@@ -17,7 +20,8 @@ const tpsController = {
                     name: validate.name,
                     alamat: validate.alamat,
                     rt: validate.rt,
-                    rw: validate.rw
+                    rw: validate.rw,
+                    electionId: electionId
                 }
             })
 
@@ -32,7 +36,13 @@ const tpsController = {
             const userId = req.user?.id;
             if(!userId) return response.notFound(res, "User not found");
 
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat");
+
             const result = await prisma.tps.findMany({
+                where: {
+                    electionId: electionId
+                },
                 orderBy: {
                     name: "asc"
                 }
@@ -49,12 +59,16 @@ const tpsController = {
             const userId = req.user?.id;
             if(!userId) return response.notFound(res, "User not found");
 
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat");
+
             const {id} = req.params;
             if(!id) return response.notFound(res, "TPS tidak ditemukan");
 
             const result = await prisma.tps.findFirst({
                 where: {
-                    id: Number(id)
+                    id: Number(id),
+                    electionId: electionId
                 }
             });
 
@@ -71,9 +85,13 @@ const tpsController = {
             const tpsId = req.user?.tpsId;
             if(!tpsId || typeof tpsId !== "number") return response.notFound(res, "TPS tidak ditemukan");
 
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat");
+
             const result = await prisma.tps.findFirst({
                 where: {
-                    id: tpsId
+                    id: tpsId,
+                    electionId: electionId
                 }
             });
 
@@ -90,20 +108,20 @@ const tpsController = {
             const userId = req.user?.id;
             if(!userId) return response.unauthorize(res);
 
-            const role = req.user?.role;
-            if(role !== "SUPER_ADMIN") return response.forbidden(res);
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat");
 
             const {id} = req.params;;
-            if(!id) return response.notFound(res, "TPS tidak ditemukan");
-            if(!/\d/.test(id)) return response.notFound(res, "TPS tidak ditemukan");
+           
+            const updateTpsDTO = tpsDTO.partial();
+            const validate = updateTpsDTO.parse(req.body);
 
             const result = await prisma.tps.update({
                 where: {
-                    id: Number(id)
+                    id: Number(id),
+                    electionId: electionId
                 },
-                data: {
-                    ...req.body
-                }
+                data: validate
             });
 
             if(!result) return response.notFound(res, "TPS tidak ditemukan");
@@ -120,16 +138,14 @@ const tpsController = {
             const userId = req.user?.id;
             if(!userId) return response.unauthorize(res);
 
-            const role = req.user?.role;
-            if(role !== "SUPER_ADMIN") return response.forbidden(res);
-
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
             const {id} = req.params;;
-            if(!id) return response.notFound(res, "TPS tidak ditemukan");
-            if(!/\d/.test(id)) return response.notFound(res, "TPS tidak ditemukan");
-
+           
             const result = await prisma.tps.delete({
                 where: {
-                    id: Number(id)
+                    id: Number(id),
+                    electionId: electionId
                 }
             });
 
