@@ -29,24 +29,25 @@ model User {
 }
 
 model Election {
-  id              Int             @id @default(autoincrement())
-  name            String
-  desa            String
-  kecamatan       String
-  kabupatenKota   String
-  provinsi        String
-  description     String?
-  logo            String?
-  startAt         DateTime
-  endAt           DateTime
-  status          ElectionStatus  @default(DRAFT)
+  id                Int             @id @default(autoincrement())
+  name              String
+  desa              String
+  kecamatan         String
+  kabupatenKota     String
+  provinsi          String
+  description       String?
+  logo              String?
+  startAt           DateTime
+  endAt             DateTime
+  status            ElectionStatus  @default(DRAFT)
 
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
-  users           User[]
-  tps             Tps[]
-  candidates      Candidate[]
+  users             User[]
+  tps               Tps[]
+  candidates        Candidate[]
+  candidateMembers  CandidateMember[]
 }
 
 
@@ -72,20 +73,41 @@ model Tps {
 
 model Candidate {
   id                Int               @id @default(autoincrement())
-  nomor_urut        Int
-  name              String
+  nomor             Int
   img               String
   vision            String
   mission           String
   electionId        Int
   
   election          Election          @relation(fields: [electionId], references: [id])
+
+  members           CandidateMember[]
   
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
   @@index([electionId])
-  @@unique([electionId, nomor_urut])
+  @@unique([electionId, nomor])
+}
+
+model CandidateMember {
+  id                Int               @id @default(autoincrement())
+  name              String
+  img               String?
+  position          String
+  order             Int
+  electionId        Int
+  candidateId       Int
+  
+  election          Election          @relation(fields: [electionId], references: [id])
+  candidate         Candidate         @relation(fields: [candidateId], references: [id])
+
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([electionId])
+  @@index([candidateId])
+  @@unique([position, candidateId])
 }
 
 enum UserRole {

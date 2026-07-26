@@ -29,12 +29,13 @@ const response = {
 
         
         if(error instanceof PrismaClientKnownRequestError) {
+            console.log(error);
             switch(error.code) {
                 case "P2002":
                     return res.status(409).json({
                         meta: {
                             status: 409,
-                            message: "Email sudah digunakan" 
+                            message: "Field data sudah ada yg digunakan" 
                         }
                     })
                 
