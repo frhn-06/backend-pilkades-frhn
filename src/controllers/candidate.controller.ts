@@ -225,11 +225,15 @@ const candidateController = {
             if(!candidate) return response.notFound(res, "Kandidat calon tidak di temukan");
 
             const result = await prisma.$transaction(async(tx) => {
+                const img = candidate.img;
+                
                 await tx.candidateMember.deleteMany({
                     where: {
                         candidateId: candidate.id
                     }
                 })
+
+                await uploader.removeSingle(img);
 
                 const candidateDeleted = await tx.candidate.delete({
                     where: {
