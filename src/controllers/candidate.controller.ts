@@ -117,7 +117,8 @@ const candidateController = {
                         select: {
                             name: true,
                             position: true,
-                            img: true
+                            img: true,
+                            order: true
                         },
                         orderBy: {
                             order: "asc"
