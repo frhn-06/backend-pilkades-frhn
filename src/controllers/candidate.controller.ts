@@ -3,6 +3,7 @@ import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import prisma from "../libs/prisma";
 import { candidateDTO } from "../validations/candidate.validation";
+import uploader from "../utils/uploader";
 
 const candidateController = {
     create: async(req: IReqUser, res:Response) => {
@@ -146,6 +147,10 @@ const candidateController = {
             const validate = updateCandidateDTO.parse(req.body);
 
             const result = await prisma.$transaction(async(tx) => {
+                if(req.body.img !== null) {
+                    await uploader.removeSingle(req.body.oldImg)
+                }
+                
                 const candidate = await tx.candidate.update({
                     where: {
                         id: Number(id),
