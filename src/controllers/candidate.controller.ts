@@ -147,7 +147,7 @@ const candidateController = {
             const validate = updateCandidateDTO.parse(req.body);
 
             const result = await prisma.$transaction(async(tx) => {
-                if(req.body.img !== null || req.body.oldImg !== validate.img) {
+                if(req.body.img !== null && req.body.oldImg !== validate.img) {
                     await uploader.removeSingle(req.body.oldImg)
                 }
 
