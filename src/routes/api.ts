@@ -20,6 +20,8 @@ router.post("/auth/login", authController.login);
 
 router.get("/auth/me", [authMiddleware], authController.FindMeByToken);
 
+router.get("/auth/find-me", [authMiddleware], authController.findMe);
+
 
 
 router.post("/election", [authMiddleware, aclMiddleware(["SUPER_ADMIN"])], electionController.create);

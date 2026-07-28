@@ -86,7 +86,37 @@ const authController = {
         }catch(error) {
             response.error(res, error, "Gagal mengambil data user")
         }
-    }
+    },
+
+    findMe: async(req:IReqUser, res:Response) => {
+        try{
+            const userId = req.user?.id;
+            if(!userId) return response.unauthorize(res);
+
+            const result = await prisma.user.findUnique({
+                where: {
+                    id: userId
+                },
+                include: {
+                    tps: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                },
+                omit: {
+                    password: true
+                }
+            });
+
+            if(!result) return response.notFound(res, "User tidak ditemukan");
+
+            response.success(res, result, "Berhasil mengambil data user")
+        }catch(error) {
+            response.error(res, error, "Gagal mengambil data user")
+        }
+    },
 }
 
 export default authController;
