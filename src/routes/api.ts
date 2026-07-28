@@ -9,6 +9,7 @@ import mediaController from "../controllers/media.controller";
 import petugasController from "../controllers/petugas.controller";
 import electionMiddleware from "../middleware/election.middleware";
 import candidateController from "../controllers/candidate.controller";
+import voterController from "../controllers/voter.controller";
 
 const router = express.Router();
 
@@ -81,5 +82,27 @@ router.get("/candidate/:id", [authMiddleware, electionMiddleware], candidateCont
 router.patch("/candidate/:id", [authMiddleware, electionMiddleware, aclMiddleware(["SUPER_ADMIN"])], candidateController.update);
 
 router.delete("/candidate/:id", [authMiddleware, electionMiddleware, aclMiddleware(["SUPER_ADMIN"])], candidateController.delete);
+
+
+
+
+
+
+router.post("/voter", [authMiddleware, electionMiddleware, aclMiddleware(["PETUGAS"])], voterController.create);
+
+router.get("/all-voter", [authMiddleware, electionMiddleware], voterController.findAll);
+
+router.get("/voter", [authMiddleware, electionMiddleware, aclMiddleware(["PETUGAS"])], voterController.findAllPerTps);
+
+router.get("/voter/:id", [authMiddleware, electionMiddleware], voterController.findOne);
+
+router.patch("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware(["PETUGAS"])], voterController.update);
+
+router.patch("/voter/:id/present", [authMiddleware, electionMiddleware, aclMiddleware(["PETUGAS"])], voterController.present);
+
+router.patch("/voter/:id/voted", [authMiddleware, electionMiddleware, aclMiddleware(["PETUGAS"])], voterController.voted);
+
+router.delete("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware(["PETUGAS"])], voterController.delete);
+
 
 export default router;

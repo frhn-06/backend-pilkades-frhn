@@ -28,6 +28,7 @@ model User {
   @@index([electionId])
 }
 
+
 model Election {
   id                Int             @id @default(autoincrement())
   name              String
@@ -48,6 +49,7 @@ model Election {
   tps               Tps[]
   candidates        Candidate[]
   candidateMembers  CandidateMember[]
+  voters            Voter[]
 }
 
 
@@ -66,6 +68,7 @@ model Tps {
   election    Election @relation(fields: [electionId], references: [id])
 
   users       User[]
+  voters      Voter[]
 
   @@index([electionId])
 }
@@ -90,6 +93,7 @@ model Candidate {
   @@unique([electionId, nomor])
 }
 
+
 model CandidateMember {
   id                Int               @id @default(autoincrement())
   name              String
@@ -109,6 +113,33 @@ model CandidateMember {
   @@index([candidateId])
   @@unique([position, candidateId])
 }
+
+
+model Voter {
+  id              Int           @id @default(autoincrement())
+  name            String
+  nik             String?
+  info            String?
+  isPresent       Boolean       @default(false)
+  isVoted         Boolean       @default(false)
+  electionId      Int
+  tpsId           Int
+
+  election        Election      @relation(fields:[electionId], references:[id])
+  tps             Tps           @relation(fields:[tpsId], references:[id])
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([electionId])
+  @@index([electionId, tpsId])
+  @@index([electionId, tpsId, isPresent])
+  @@index([electionId, tpsId, isVoted])
+  @@unique([electionId, nik])
+}
+
+
+
 
 enum UserRole {
   SUPER_ADMIN
