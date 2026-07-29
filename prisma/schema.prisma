@@ -50,6 +50,7 @@ model Election {
   candidates        Candidate[]
   candidateMembers  CandidateMember[]
   voters            Voter[]
+  tokenVotes        TokenVote[]
 }
 
 
@@ -69,6 +70,7 @@ model Tps {
 
   users       User[]
   voters      Voter[]
+  tokenVotes  TokenVote[]
 
   @@index([electionId])
 }
@@ -128,6 +130,8 @@ model Voter {
   election        Election      @relation(fields:[electionId], references:[id])
   tps             Tps           @relation(fields:[tpsId], references:[id])
 
+  tokenVotes      TokenVote[]
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -136,6 +140,32 @@ model Voter {
   @@index([electionId, tpsId, isPresent])
   @@index([electionId, tpsId, isVoted])
   @@unique([electionId, nik])
+}
+
+
+
+model TokenVote {
+  id            Int         @id @default(autoincrement())
+  token         String
+  isUsed        Boolean     @default(false)
+  expiredAt     DateTime
+  usedAt        DateTime?
+
+  electionId    Int
+  tpsId         Int
+  voterId       Int
+
+  election      Election    @relation(fields:[electionId], references:[id])
+  tps           Tps         @relation(fields:[tpsId], references:[id])
+  voter         Voter       @relation(fields:[voterId], references:[id])
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([token])
+  @@index([voterId])
+  @@index([electionId, tpsId])
+  @@unique([electionId, token])
 }
 
 

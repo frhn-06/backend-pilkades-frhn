@@ -12,6 +12,7 @@ import candidateController from "../controllers/candidate.controller";
 import voterController from "../controllers/voter.controller";
 import { ElectionStatus, UserRole } from "@prisma/client";
 import electionStatusMiddleware from "../middleware/electionstatus.middleware";
+import tokenVoteController from "../controllers/tokenvote.controller";
 
 const router = express.Router();
 
@@ -107,6 +108,18 @@ router.patch("/voter/:id/present", [authMiddleware, electionMiddleware, aclMiddl
 router.patch("/voter/:id/voted", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voterController.voted);
 
 router.delete("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], voterController.delete);
+
+
+
+
+
+
+
+router.post("/token-vote/:voterId/create", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.create);
+
+router.get("/token-vote", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.findAll);
+
+router.post("/token-vote/validation", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.validation)
 
 
 export default router;
