@@ -3,7 +3,7 @@ import { IReqUser } from "../types/user"
 import response from "../utils/response"
 import { UserRole } from "@prisma/client"
 
-const aclMiddleware = (array: string[]) => {
+const aclMiddleware = (array: UserRole[]) => {
     return (req:IReqUser, res:Response, next:NextFunction) => {
         const roleUser = req.user?.role;
         if(!roleUser) return response.unauthorize(res);
