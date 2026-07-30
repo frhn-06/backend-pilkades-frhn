@@ -114,7 +114,7 @@ const tokenVoteController = {
             const expired = tokenAda.expiredAt.getTime();
             if(tokenAda && !tokenAda.isUsed && now > expired) return response.error(res, {status: "error"}, "Token sudah kadalwarsa");
 
-            response.success(res, {status: "success", voterId: tokenAda.voterId}, "Validasi token berhasil")
+            response.success(res, {status: "success", voterId: tokenAda.voterId, token: tokenAda.token}, "Validasi token berhasil")
 
         }catch(error) {
             response.error(res, error, "Validasi token gagal");

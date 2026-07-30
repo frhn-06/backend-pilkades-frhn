@@ -59,6 +59,16 @@ const response = {
 
         
 
+        if (error instanceof Error) {
+            return res.status(400).json({
+                meta: {
+                    status: 400,
+                    message: error.message
+                }
+            });
+        }
+        
+
 
         return res.status(500).json({
             meta: {

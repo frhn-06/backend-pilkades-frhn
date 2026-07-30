@@ -13,6 +13,7 @@ import voterController from "../controllers/voter.controller";
 import { ElectionStatus, UserRole } from "@prisma/client";
 import electionStatusMiddleware from "../middleware/electionstatus.middleware";
 import tokenVoteController from "../controllers/tokenvote.controller";
+import voteController from "../controllers/vote.controller";
 
 const router = express.Router();
 
@@ -121,5 +122,12 @@ router.get("/token-vote", [authMiddleware, electionMiddleware, aclMiddleware([Us
 
 router.post("/token-vote/validation", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.validation)
 
+
+
+
+
+
+
+router.post("/vote", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voteController.create);
 
 export default router;
