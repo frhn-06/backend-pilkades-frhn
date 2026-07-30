@@ -120,7 +120,7 @@ router.post("/token-vote/:voterId/create", [authMiddleware, electionMiddleware, 
 
 router.get("/token-vote", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.findAll);
 
-router.get("/token/:id/find", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.findOne);
+router.get("/token-vote/:id/find", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.findOne);
 
 router.post("/token-vote/validation", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], tokenVoteController.validation)
 
