@@ -85,6 +85,43 @@ const tokenVoteController = {
         }
     },
 
+    findOne: async(req:IReqUser, res:Response) => {
+        try {
+            const electionId = req.user!.electionId;
+            if(electionId === null) return response.error(res, false, "Eleksi tidak ditemukan / belum dibuat");
+
+            const {id} = req.params;  
+            
+            const result = await prisma.tokenVote.findFirst({
+                where: {
+                    electionId: electionId,
+                    id: Number(id)
+                },
+                include: {
+                    election: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    tps: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    voter: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            })
+            if(!result) return response.notFound(res, "Token tidak ditemukan");
+
+            response.success(res, result, "Berhasil mengakses token")
+        }catch (error) {
+            response.error(res, error, "Gagal mengakses token");
+        }
+    },
 
     validation: async (req:IReqUser, res:Response) => {
         try{
