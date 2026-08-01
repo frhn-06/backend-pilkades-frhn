@@ -14,6 +14,7 @@ import { ElectionStatus, UserRole } from "@prisma/client";
 import electionStatusMiddleware from "../middleware/electionstatus.middleware";
 import tokenVoteController from "../controllers/tokenvote.controller";
 import voteController from "../controllers/vote.controller";
+import dashboardController from "../controllers/dashboard.controller";
 
 const router = express.Router();
 
@@ -131,5 +132,15 @@ router.post("/token-vote/validation", [authMiddleware, electionMiddleware, aclMi
 
 
 router.post("/vote", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voteController.create);
+
+
+
+
+
+router.get("/dashboard/admin", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], dashboardController.admin);
+
+router.get("/dashboard/petugas", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS])], dashboardController.petugas);
+
+
 
 export default router;
