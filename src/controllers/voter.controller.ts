@@ -244,6 +244,60 @@ const voterController = {
         }
     },
 
+    notPresent: async(req:IReqUser, res: Response) => {
+        try {
+            const electionId = req.user!.electionId;
+            if(electionId === null) return response.error(res, false, "Eleksi tidak ditemukan / belum dibuat");
+
+            const tpsId = req.user!.tpsId;
+            if(tpsId === null) return response.forbidden(res);
+
+            const {id} = req.params;
+
+            const result = await prisma.$transaction(async(tx) => {
+                const voter = await tx.voter.findFirst({
+                    where: {
+                        id: Number(id),
+                        electionId: electionId,
+                        tpsId: tpsId
+                    }
+                });
+    
+                if(!voter) throw Error("Voter tidak ditemukan")
+                if(!voter.isPresent) throw Error("Voter memang belum hadir")
+                if(voter.isVoted) throw Error("Voter sudah mencoblos");
+    
+                await tx.tokenVote.deleteMany({
+                    where: {
+                        electionId: electionId,
+                        tpsId: tpsId,
+                        voterId: voter.id,
+                        isUsed: false,
+                        expiredAt: {
+                            gt: new Date()
+                        }
+                    }
+                });
+
+                const result = await tx.voter.update({
+                    where: {
+                        id: voter.id
+                    },
+                    data: {
+                        isPresent: false
+                    }
+                });
+
+                return result
+            })
+
+            response.success(res, result, "Berhasil membatalkan hadir voter");
+
+        }catch(error){
+            response.error(res, error, "Gagal membatalkan hadir voter")
+        }
+    },
+
     voted: async(req:IReqUser, res: Response) => {
         try {
             const electionId = req.user!.electionId;
