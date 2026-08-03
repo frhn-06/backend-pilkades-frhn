@@ -3,7 +3,7 @@ import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import prisma from "../libs/prisma";
 import { electionDTO, statusDTO } from "../validations/election.validation";
-import { ElectionStatus } from "@prisma/client";
+import { ElectionStatus, UserRole } from "@prisma/client";
 
 const electionController = {
     create: async(req:IReqUser, res:Response) => {
@@ -113,16 +113,18 @@ const electionController = {
             const result = await prisma.$transaction(async(tx) => {
                 await tx.user.update({
                     where: {
-                        id: userId
+                        id: userId,
                     },
                     data: {
-                        electionId: null
+                        electionId: null,
+                        tpsId: null
                     }
                 });
 
-                await tx.tps.deleteMany({
+                await tx.user.deleteMany({
                     where: {
-                        electionId: electionId
+                        electionId: electionId,
+                        role: UserRole.PETUGAS
                     }
                 })
 

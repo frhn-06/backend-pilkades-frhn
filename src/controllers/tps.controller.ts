@@ -141,30 +141,12 @@ const tpsController = {
             const electionId = req.user?.electionId;
             if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
             const {id} = req.params;;
-           
-            const result = await prisma.$transaction(async(tx) => {
-                await prisma.voter.deleteMany({
-                    where: {
-                        tpsId: Number(id),
-                        electionId: electionId
-                    }
-                })
 
-                await prisma.user.deleteMany({
-                    where: {
-                        tpsId: Number(id),
-                        electionId: electionId
-                    }
-                })
-
-                const tpsDeleted = await prisma.tps.delete({
-                    where: {
-                        id: Number(id),
-                        electionId: electionId
-                    }
-                });
-                
-                return tpsDeleted
+            const result = await prisma.tps.delete({
+                where: {
+                    id: Number(id),
+                    electionId: electionId
+                }
             })
 
             if(!result) return response.notFound(res, "TPS tidak ditemukan");

@@ -67,7 +67,7 @@ model Tps {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  election    Election @relation(fields: [electionId], references: [id])
+  election    Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
 
   users       User[]
   voters      Voter[]
@@ -86,7 +86,7 @@ model Candidate {
   mission           String
   electionId        Int
   
-  election          Election          @relation(fields: [electionId], references: [id])
+  election          Election          @relation(fields: [electionId], references: [id], onDelete: Cascade)
 
   members           CandidateMember[]
   
@@ -109,8 +109,8 @@ model CandidateMember {
   electionId        Int
   candidateId       Int
   
-  election          Election          @relation(fields: [electionId], references: [id])
-  candidate         Candidate         @relation(fields: [candidateId], references: [id])
+  election          Election          @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  candidate         Candidate         @relation(fields: [candidateId], references: [id], onDelete: Cascade)
 
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
@@ -131,8 +131,8 @@ model Voter {
   electionId      Int
   tpsId           Int
 
-  election        Election      @relation(fields:[electionId], references:[id])
-  tps             Tps           @relation(fields:[tpsId], references:[id])
+  election        Election      @relation(fields:[electionId], references:[id], onDelete: Cascade)
+  tps             Tps           @relation(fields:[tpsId], references:[id], onDelete: Cascade)
 
   tokenVotes      TokenVote[]
   votes           Vote[]          
@@ -160,9 +160,9 @@ model TokenVote {
   tpsId         Int
   voterId       Int
 
-  election      Election    @relation(fields:[electionId], references:[id])
-  tps           Tps         @relation(fields:[tpsId], references:[id])
-  voter         Voter       @relation(fields:[voterId], references:[id])
+  election      Election    @relation(fields:[electionId], references:[id], onDelete: Cascade)
+  tps           Tps         @relation(fields:[tpsId], references:[id], onDelete: Cascade)
+  voter         Voter       @relation(fields:[voterId], references:[id], onDelete: Cascade)
 
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
