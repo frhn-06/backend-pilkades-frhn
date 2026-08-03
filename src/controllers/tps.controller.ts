@@ -3,6 +3,7 @@ import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import { tpsDTO } from "../validations/tps.validation";
 import prisma from "../libs/prisma";
+import { UserRole } from "@prisma/client";
 
 const tpsController = {
     create: async(req:IReqUser, res:Response) => {
@@ -140,14 +141,27 @@ const tpsController = {
 
             const electionId = req.user?.electionId;
             if(electionId === null) return response.error(res, false, "Election tidak ditemukan/ belum dibuat")
-            const {id} = req.params;;
+            const {id} = req.params;
 
-            const result = await prisma.tps.delete({
-                where: {
-                    id: Number(id),
-                    electionId: electionId
-                }
+            const result = await prisma.$transaction(async(tx) => {
+                await tx.user.deleteMany({
+                    where: {
+                        electionId: electionId,
+                        tpsId: Number(id),
+                        role: UserRole.PETUGAS
+                    }
+                })
+
+                const result = await tx.tps.delete({
+                    where: {
+                        id: Number(id),
+                        electionId: electionId
+                    }
+                })
+
+                return result
             })
+
 
             if(!result) return response.notFound(res, "TPS tidak ditemukan");
 
