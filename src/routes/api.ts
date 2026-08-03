@@ -107,6 +107,8 @@ router.patch("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([U
 
 router.patch("/voter/:id/present", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voterController.present);
 
+router.patch("/voter/:id/no-present", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voterController.notPresent);
+
 router.patch("/voter/:id/voted", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voterController.voted);
 
 router.delete("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], voterController.delete);
