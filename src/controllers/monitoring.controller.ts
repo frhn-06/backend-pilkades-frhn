@@ -89,6 +89,8 @@ const monitoringController = {
                 totalVoterVote, 
 
                 candidates,
+
+                tps
             ] = await prisma.$transaction([
                 prisma.voter.count({
                     where: {
@@ -120,6 +122,16 @@ const monitoringController = {
                             }
                         },
                     }
+                }),
+
+                prisma.tps.findUnique({
+                    where: {
+                        id: tpsId
+                    },
+                    select: {
+                        name: true,
+                        alamat: true,
+                    }
                 })
             ]);
 
@@ -146,6 +158,7 @@ const monitoringController = {
             })
 
             const result = {
+                tps,
                 progress: {
                     totalAllVoter,
                     totalVoterVote,
