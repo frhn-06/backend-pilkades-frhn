@@ -103,6 +103,12 @@ const authController = {
                             id: true,
                             name: true
                         }
+                    },
+                    election: {
+                        select: {
+                            id: true,
+                            logo: true
+                        }
                     }
                 },
                 omit: {
