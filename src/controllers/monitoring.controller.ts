@@ -47,6 +47,9 @@ const monitoringController = {
                                 votes: true
                             }
                         },
+                    },
+                    orderBy: {
+                        id: "asc"
                     }
                 })
             ]);
