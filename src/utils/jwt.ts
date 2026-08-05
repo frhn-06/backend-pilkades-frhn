@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
-import { IUserToken } from '../types/user'
-import { SECRET } from './env'
+import { IUserResetPassword, IUserToken } from '../types/user'
+import { RESET_PASSWORD_RESET, SECRET } from './env'
 
 const signIn = (user: IUserToken) => {
     const token = jwt.sign(user, SECRET, {
@@ -14,4 +14,17 @@ const getUserByToken = (token: string) => {
     return result;
 }
 
-export {signIn, getUserByToken}
+
+const createTokenReset = (obj: IUserResetPassword) => {
+    const token = jwt.sign(obj, RESET_PASSWORD_RESET, {
+        expiresIn: "1h"
+    });
+    return token
+}
+
+const verifyTokenReset = (token: string) => {
+    const result = jwt.verify(token, RESET_PASSWORD_RESET) as IUserResetPassword;
+    return result;
+}
+
+export {signIn, getUserByToken, createTokenReset, verifyTokenReset}

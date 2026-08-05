@@ -15,4 +15,9 @@ interface IReqUser extends Request {
     user?: IUserToken
 }
 
-export type {IUser, IUserToken, IReqUser}
+interface IUserResetPassword {
+    userId: number;
+    purpose: string;
+}
+
+export type {IUser, IUserToken, IReqUser, IUserResetPassword}

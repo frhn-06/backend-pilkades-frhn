@@ -29,4 +29,15 @@ const petugasDTO = zod.object({
     password: passwordDTO
 })
 
-export {registerDTO, loginDTO, petugasDTO}
+
+const resetPasswordDTO = zod.object({
+    password: passwordDTO,
+    confirmPassword: z.string().trim(),
+    resetToken: z.string().trim()
+})
+.refine((value) => value.password === value.confirmPassword, {
+    message: "Konfirmasi password tidak sasesuaima",
+    path: ["confirmPassword"]
+})
+
+export {registerDTO, loginDTO, petugasDTO, resetPasswordDTO}

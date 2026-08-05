@@ -28,6 +28,12 @@ router.get("/auth/me", [authMiddleware], authController.FindMeByToken);
 
 router.get("/auth/find-me", [authMiddleware], authController.findMe);
 
+router.post("/auth/forget-password", authController.forgetPassword);
+
+router.post("/auth/verify-otp", authController.verifyOtp);
+
+router.patch("/auth/reset-password", authController.resetPassword);
+
 
 
 router.post("/election", [authMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], electionController.create);

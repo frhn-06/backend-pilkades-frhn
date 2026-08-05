@@ -1,4 +1,5 @@
-const generateExpired = (now: Date, selisih: number) => {
+const generateExpired = (selisih: number) => {
+    const now = new Date();
     const time = now.getTime();
     const timePlusSelisih = time + selisih;
 

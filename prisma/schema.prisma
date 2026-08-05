@@ -7,22 +7,24 @@ datasource db {
 }
 
 model User {
-  id             Int        @id @default(autoincrement())
-  name           String
-  email          String     @unique
-  password       String
-  role           UserRole
-  tpsId          Int?
-  electionId     Int?
+  id                    Int        @id @default(autoincrement())
+  name                  String
+  email                 String     @unique
+  password              String
+  role                  UserRole
+  tpsId                 Int?
+  electionId            Int?
 
-  activationCode String?
-  isActive       Boolean    @default(true)
+  activationCode        String?
+  isActive              Boolean    @default(true)
 
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
 
-  tps            Tps?       @relation(fields: [tpsId], references: [id])
-  election       Election?  @relation(fields: [electionId], references: [id])
+  tps                   Tps?       @relation(fields: [tpsId], references: [id])
+  election              Election?  @relation(fields: [electionId], references: [id])
+
+  otpResetPasswords     OTPResetPassword[]
 
   @@index([electionId, isActive])
   @@index([electionId])
@@ -198,6 +200,24 @@ model Vote {
   @@unique([electionId, voterId])
 }
 
+
+
+
+model OTPResetPassword {
+  id              Int         @id @default(autoincrement())
+  otp             String      @unique
+  isUsed          Boolean     @default(false)
+  expiredAt       DateTime
+
+  userId          Int
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  user            User        @relation(fields:[userId], references:[id], onDelete: Cascade)
+
+  @@index([userId])
+}
 
 
 

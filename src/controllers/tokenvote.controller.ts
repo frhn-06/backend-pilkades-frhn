@@ -44,9 +44,8 @@ const tokenVoteController = {
 
             const token = generateTokenVote();
 
-            const now = new Date();
             const selisih = 1000 * 60 * 60 * 4;
-            const expiredAt = generateExpired(now, selisih);
+            const expiredAt = generateExpired(selisih);
 
             const result = await prisma.tokenVote.create({
                 data: {
