@@ -186,14 +186,17 @@ const authController = {
                 html: contentEmail
             });
 
+            const result = {
+                email: user.email,
+                expired: otpData.expiredAt
+            }
 
-            response.success(res, {
-                status: "success"
-            }, "Berhasil mengirim kode OTP ke email")
+            response.success(res, result, "Berhasil mengirim kode OTP ke email")
         } catch(error) {
             response.error(res, error, "Gagal mengirim kode OTP ke email")
         }
     },
+    
 
     verifyOtp: async(req:Request, res:Response) => {
         try {
