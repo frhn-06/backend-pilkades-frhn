@@ -16,6 +16,7 @@ import tokenVoteController from "../controllers/tokenvote.controller";
 import voteController from "../controllers/vote.controller";
 import dashboardController from "../controllers/dashboard.controller";
 import monitoringController from "../controllers/monitoring.controller";
+import exportController from "../controllers/export.controller";
 
 const router = express.Router();
 
@@ -156,6 +157,16 @@ router.get("/dashboard/petugas", [authMiddleware, electionMiddleware, aclMiddlew
 router.get("/monitoring/admin", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.ONGOING, ElectionStatus.FINISHED])], monitoringController.admin);
 
 router.get("/monitoring/petugas", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING, ElectionStatus.FINISHED])], monitoringController.petugas);
+
+
+
+
+
+
+
+router.get("/export/result/pdf", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.FINISHED])], exportController.resultPDF);
+
+
 
 
 export default router;
