@@ -19,9 +19,7 @@ const tpsController = {
             const result = await prisma.tps.create({
                 data: {
                     name: validate.name,
-                    alamat: validate.alamat,
-                    rt: validate.rt,
-                    rw: validate.rw,
+                    location: validate.location,
                     electionId: electionId
                 }
             })

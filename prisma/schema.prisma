@@ -58,9 +58,7 @@ model Election {
 model Tps {
   id          Int      @id @default(autoincrement())
   name        String
-  alamat      String
-  rt          Int
-  rw          Int
+  location    String
 
   electionId  Int
 

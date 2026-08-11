@@ -133,7 +133,7 @@ const monitoringController = {
                     },
                     select: {
                         name: true,
-                        alamat: true,
+                        location: true,
                     }
                 })
             ]);

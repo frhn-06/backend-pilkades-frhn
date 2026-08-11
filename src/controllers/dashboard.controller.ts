@@ -113,7 +113,7 @@ const dashboardController = {
                     select: {
                         id: true,
                         name: true,
-                        alamat: true,
+                        location: true,
                     }
                 }),
     
