@@ -3,7 +3,7 @@ import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import prisma from "../libs/prisma";
 import { electionDTO, statusDTO } from "../validations/election.validation";
-import { ElectionStatus, UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 
 const electionController = {
     create: async(req:IReqUser, res:Response) => {
@@ -26,12 +26,11 @@ const electionController = {
                 const election = await tx.election.create({
                     data: {
                         name: validate.name,
-                        desa: validate.desa,
-                        kecamatan: validate.kecamatan,
-                        kabupatenKota: validate.kabupatenKota,
-                        provinsi: validate.provinsi,
                         startAt: validate.startAt,
-                        endAt: validate.endAt
+                        endAt: validate.endAt,
+                        organizerInfo: validate.organizerInfo,
+                        organizerName: validate.organizerName,
+                        description: validate.description
                     }
                 });
     

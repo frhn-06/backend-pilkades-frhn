@@ -3,10 +3,8 @@ import { ElectionStatus } from "@prisma/client";
 interface IElectionResult {
     id: number;
     name: string;
-    desa: string;
-    kecamatan: string;
-    kabupatenKota: string;
-    provinsi: string;
+    organizerInfo: string;
+    organizerName: string;
     logo: string | null;
     startAt: Date;
     endAt: Date;

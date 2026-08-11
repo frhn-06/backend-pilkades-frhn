@@ -6,10 +6,8 @@ import { IResultReport } from '../../types/result.report';
 
 const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
     const nameElection = data.election.name;
-    const desa = data.election.desa;
-    const kecamatan = data.election.kecamatan;
-    const kabupatenKota = data.election.kabupatenKota;
-    const provinsi = data.election.provinsi;
+    const organizerInfo = data.election.organizerInfo;
+    const organizerName = data.election.organizerName;
     const awal = data.election.startAt;
     const akhir = data.election.endAt;
     const logo = data.election.logo;
@@ -40,9 +38,16 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
     doc.fontSize(13).text(`${nameElection}`, {
         align: "center",
     });
-    doc.fontSize(12).text(`${desa}, ${kecamatan}, ${kabupatenKota}, ${provinsi}`, {
-        align: "center"
-    })
+    if(organizerName !== null) {
+        doc.fontSize(12).text(`${organizerName}`, {
+            align: "center"
+        });
+    }
+    if(organizerInfo !== null) {
+        doc.fontSize(12).text(`${organizerInfo}`, {
+            align: "center"
+        });
+    }
    
     doc.moveDown();
     doc.moveDown();

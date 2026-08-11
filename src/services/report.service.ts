@@ -10,10 +10,8 @@ const reportService = {
                 select: {
                     id: true,
                     name: true,
-                    desa: true,
-                    kecamatan: true,
-                    kabupatenKota: true,
-                    provinsi: true,
+                    organizerInfo: true,
+                    organizerName: true,
                     logo: true,
                     startAt: true,
                     endAt: true,
