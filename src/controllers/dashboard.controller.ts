@@ -27,7 +27,8 @@ const dashboardController = {
                         status: true,
                         logo: true,
                         organizerInfo: true,
-                        organizerName: true
+                        organizerName: true,
+                        description: true
                     }
                 }),
     
@@ -104,7 +105,8 @@ const dashboardController = {
                         status: true,
                         logo: true,
                         organizerName: true,
-                        organizerInfo: true
+                        organizerInfo: true,
+                        description: true
                     }
                 }),
 
