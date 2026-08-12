@@ -32,6 +32,7 @@ const voterController = {
             response.error(res, error, "Gagal membuat data pemilih")
         }
     },
+
     findAll: async(req:IReqUser, res:Response) => {
         try{
             const electionId = req.user!.electionId;
@@ -82,7 +83,9 @@ const voterController = {
                 },
                 orderBy: {
                     name: "asc"
-                }
+                },
+                take: Number(limit),
+                skip: (Number(page) - 1) * Number(limit) 
             });
 
             const totalData = await prisma.voter.count({
