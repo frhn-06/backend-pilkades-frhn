@@ -73,6 +73,8 @@ const voterController = {
 
             const result = await prisma.voter.findMany({
                 where: query,
+                take: Number(limit),
+                skip: (Number(page) - 1) * Number(limit),
                 include: {
                     tps: {
                         select: {
@@ -84,8 +86,6 @@ const voterController = {
                 orderBy: {
                     name: "asc"
                 },
-                take: Number(limit),
-                skip: (Number(page) - 1) * Number(limit) 
             });
 
             const totalData = await prisma.voter.count({
