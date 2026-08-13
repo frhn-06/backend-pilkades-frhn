@@ -47,6 +47,8 @@ router.delete("/election",  [authMiddleware, electionMiddleware, aclMiddleware([
 
 router.patch("/election/status",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], electionController.status);
 
+router.patch("/election/update-logo",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], electionController.updateLogo);
+
 
 
 

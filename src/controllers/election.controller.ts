@@ -2,8 +2,9 @@ import { Response, Request } from "express";
 import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import prisma from "../libs/prisma";
-import { electionDTO, statusDTO } from "../validations/election.validation";
+import { electionDTO, logoDTO, statusDTO } from "../validations/election.validation";
 import { UserRole } from "@prisma/client";
+import uploader from "../utils/uploader";
 
 const electionController = {
     create: async(req:IReqUser, res:Response) => {
@@ -59,7 +60,7 @@ const electionController = {
             if(!userId) return response.notFound(res, "User not found");
             
             const electionId = req.user?.electionId;
-            if(electionId === null) return response.success(res, {}, "Election belum dibuat");
+            if(electionId === null) return response.success(res, false, "Election belum dibuat");
 
             const election = await prisma.election.findUnique({
                 where: {
@@ -133,6 +134,10 @@ const electionController = {
                     }
                 })
 
+                if(election.logo !== null) {
+                    await uploader.removeSingle(election.logo)
+                }
+
                 return election
             })
 
@@ -168,7 +173,45 @@ const electionController = {
         }
     },
 
-    
+    updateLogo: async(req:IReqUser, res:Response) => {
+        try {
+            const electionId = req.user?.electionId;
+            if(electionId === null) return response.success(res, false, "Election belum dibuat");
+
+            const election = await prisma.election.findUnique({
+                where: {
+                    id: electionId
+                }
+            })
+            if(!election) return response.notFound(res, "Election tidak ditemukan");
+
+            const validate = logoDTO.parse(req.body);
+
+            
+            const result = await prisma.$transaction(async(tx) => {
+                const result = await tx.election.update({
+                    where: {
+                        id: election.id
+                    },
+                    data: {
+                        logo: validate.logo
+                    },
+                });
+
+                if(election.logo !== null && election.logo.startsWith("https://res.cloudinary.com")) {
+                    await uploader.removeSingle(election.logo);
+                }
+
+                return result
+            });
+
+            response.success(res, result, "Berhasil mengupdate logo election");
+
+            console.log()
+        } catch(error) {
+            response.error(res, error, "Gagal mungupdate logo elction")
+        }
+    }
 }
 
 
