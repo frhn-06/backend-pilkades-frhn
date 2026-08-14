@@ -14,6 +14,8 @@ const monitoringController = {
                 totalVoterVote, 
 
                 candidates,
+
+                tps
             ] = await prisma.$transaction([
                 prisma.voter.count({
                     where: {
@@ -51,6 +53,26 @@ const monitoringController = {
                     orderBy: {
                         id: "asc"
                     }
+                }),
+
+
+                prisma.tps.findMany({
+                    where: {
+                        electionId: electionId,
+                        voters: {
+                            some: {}
+                        }
+                    },
+                    select: {
+                        name: true,
+                        id: true,
+                        _count: {
+                            select: {
+                                voters: true,
+                                votes: true
+                            }
+                        }
+                    }
                 })
             ]);
 
@@ -60,15 +82,26 @@ const monitoringController = {
                     vote: candid._count.votes,
                     percentage: Number((totalVoterVote === 0 ? 0 : candid._count.votes * 100 / totalVoterVote).toFixed(2))
                 }
+            });
+
+            const progressTps = tps.map((tp) => {
+                return {
+                    id: tp.id,
+                    name: tp.name,
+                    totalVoters: tp._count.voters,
+                    totalVote: tp._count.votes,
+                    percentageVote: tp._count.voters === 0 ? 0 : Number((tp._count.votes * 100 / tp._count.voters).toFixed(2))
+                }
             })
 
             const result = {
                 progress: {
                     totalAllVoter,
                     totalVoterVote,
-                    percentageVoterVote: totalAllVoter === 0 ? 0 : Number((totalVoterVote * 100 / totalAllVoter).toFixed(2))
+                    percentageVoterVote: totalAllVoter === 0 ? 0 : Number((totalVoterVote * 100 / totalAllVoter).toFixed(2)),
                 },
-                candidates: candidateResult
+                candidates: candidateResult,
+                progressTps
             }
             response.success(res, result, "Berhasil mengakses monitoring admin");
 
