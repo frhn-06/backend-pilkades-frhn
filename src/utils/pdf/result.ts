@@ -1,5 +1,6 @@
 import PDFDocument from 'pdfkit'
 import { IResultReport } from '../../types/result.report';
+import convert from '../convert';
 
 
 
@@ -9,9 +10,6 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
     const organizerInfo = data.election.organizerInfo;
     const organizerName = data.election.organizerName;
     const awal = data.election.startAt;
-    const akhir = data.election.endAt;
-    const logo = data.election.logo;
-    const status = data.election.status;
 
     const candidates = data.candidates.map(candid => candid)
 
@@ -39,6 +37,7 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
             align: "center"
         });
     }
+    doc.fontSize(10).text(`${convert.FormatTimetoLocalJustDate(awal)}`)
     if(organizerInfo !== null) {
         doc.fontSize(10).text(`${organizerInfo}`, {
             align: "center"
@@ -69,7 +68,7 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
 
     doc.fontSize(12).font("Times-Roman");
     doc.text("Laporan ini dibuat secara otomatis oleh sistem.");
-    doc.text(`Di cetak pada ${exportAt.toLocaleString("id-ID", {dateStyle:'full',timeStyle:"long"})}`);
+    doc.text(`Di cetak pada ${convert.FormatTimeToLocalFull(exportAt)}`);
 }
 
 
