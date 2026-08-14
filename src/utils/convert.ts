@@ -11,10 +11,11 @@ const convert = {
     },
 
     FormatTimetoLocalJustDate:  (date: Date) => {
-        return date.toLocaleDateString("id-ID", {
+        return date.toLocaleString("id-ID", {
             timeZone: "Asia/Jakarta",
-            timeStyle: "long",
-            dateStyle: "full"
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
         })
     } 
 }
