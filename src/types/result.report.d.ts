@@ -3,8 +3,8 @@ import { ElectionStatus } from "@prisma/client";
 interface IElectionResult {
     id: number;
     name: string;
-    organizerInfo: string;
-    organizerName: string;
+    organizerInfo: string | null;
+    organizerName: string | null;
     logo: string | null;
     startAt: Date;
     endAt: Date;

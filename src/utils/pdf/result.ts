@@ -28,23 +28,19 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
         align: "center",
     });
     doc.moveDown();
-    doc.fontSize(14).text(`Election Management System`, {
-        align: "center",
-    });
-
-    doc.moveDown();
     doc.moveDown();
 
     doc.fontSize(13).text(`${nameElection}`, {
         align: "center",
     });
+    doc.moveDown();
     if(organizerName !== null) {
         doc.fontSize(12).text(`${organizerName}`, {
             align: "center"
         });
     }
     if(organizerInfo !== null) {
-        doc.fontSize(12).text(`${organizerInfo}`, {
+        doc.fontSize(10).text(`${organizerInfo}`, {
             align: "center"
         });
     }
@@ -58,7 +54,7 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
     doc.text(`Hadir : ${present} orang`);
     doc.text(`Tidak Hadir : ${absen} orang`);
     doc.text(`Sudah Memilih : ${voted} orang`);
-    doc.text(`Tidak Memilih : ${noVoted} orang`);
+    doc.text(`Hadir Tidak Memilih : ${noVoted} orang`);
     doc.text(`Tingkat Pastisipasi : ${parcitipant} %`);
     
     doc.moveDown();
@@ -73,7 +69,7 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
 
     doc.fontSize(12).font("Times-Roman");
     doc.text("Laporan ini dibuat secara otomatis oleh sistem.");
-    doc.text(`Di cetak pada ${exportAt.toLocaleString()} WIB`);
+    doc.text(`Di cetak pada ${exportAt.toLocaleString("id-ID", {dateStyle:'full',timeStyle:"long"})}`);
 }
 
 
