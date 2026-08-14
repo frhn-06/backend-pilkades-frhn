@@ -13,8 +13,8 @@ const convert = {
     FormatTimetoLocalJustDate:  (date: Date) => {
         return date.toLocaleDateString("id-ID", {
             timeZone: "Asia/Jakarta",
-            timeStyle: "full",
-            dateStyle: "long"
+            timeStyle: "long",
+            dateStyle: "full"
         })
     } 
 }
