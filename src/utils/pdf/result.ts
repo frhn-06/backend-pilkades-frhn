@@ -37,12 +37,15 @@ const stylePDF = (doc: PDFKit.PDFDocument, data: IResultReport) => {
             align: "center"
         });
     }
-    doc.fontSize(10).text(`${convert.FormatTimetoLocalJustDate(awal)}`)
     if(organizerInfo !== null) {
         doc.fontSize(10).text(`${organizerInfo}`, {
             align: "center"
         });
     }
+    doc.moveDown()
+    doc.fontSize(10).text(`${convert.FormatTimetoLocalJustDate(awal)}`, {
+        align: "right"
+    })
    
     doc.moveDown();
     doc.moveDown();
