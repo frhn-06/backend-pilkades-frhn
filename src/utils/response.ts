@@ -15,6 +15,7 @@ const response = {
 
     error: (res: Response, error: unknown, message: string) => {
 
+        console.log(error);
         if(error instanceof ZodError) {
             const arr = error.issues.map((err) => err.message);
             const message = arr.join(", ");

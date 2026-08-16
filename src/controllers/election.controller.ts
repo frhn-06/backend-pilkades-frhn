@@ -206,8 +206,6 @@ const electionController = {
             });
 
             response.success(res, result, "Berhasil mengupdate logo election");
-
-            console.log()
         } catch(error) {
             response.error(res, error, "Gagal mungupdate logo elction")
         }

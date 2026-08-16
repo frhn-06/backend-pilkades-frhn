@@ -3,6 +3,7 @@ import { IReqUser } from "../types/user";
 import response from "../utils/response";
 import { voteDTO } from "../validations/vote.validation";
 import prisma from "../libs/prisma";
+import { getIo } from "../socket";
 
 const voteController = {
     create: async(req:IReqUser, res: Response) => {
@@ -76,6 +77,12 @@ const voteController = {
 
                 return vote;
             })
+
+            const io = getIo();
+
+            io.to(`election:${electionId}`).emit("vote:created");
+
+            io.to(`election:${electionId}-tps:${tpsId}`).emit("vote:created");
 
             response.success(res, result, "Berhasil melakukan voting")
         } catch(error) {

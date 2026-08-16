@@ -14,3 +14,5 @@ export const PASSWORD_MAIL = process.env.PASSWORD_MAIL || "";
 export const MY_MAIL = process.env.MY_MAIL || "";
 
 export const RESET_PASSWORD_RESET = process.env.RESET_PASSWORD_RESET || "";
+
+export const CLIENT_URL = process.env.CLIENT_URL || "";
