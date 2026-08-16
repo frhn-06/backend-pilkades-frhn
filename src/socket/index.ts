@@ -1,6 +1,6 @@
 import {Server, Socket} from 'socket.io'
 import {Server as HttpServer} from 'http' 
-import { SECRET } from '../utils/env';
+import { CLIENT_URL, SECRET } from '../utils/env';
 import jwt from 'jsonwebtoken'
 
 
@@ -21,7 +21,7 @@ let io: Server;
 const initializeSocket = (server: HttpServer) => {
     io = new Server(server, {
         cors: {
-            origin: "http://localhost:3001"
+            origin: CLIENT_URL
         }
     });
 
