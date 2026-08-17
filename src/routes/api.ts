@@ -43,16 +43,16 @@ router.get("/election", [authMiddleware], electionController.findOne);
 
 router.patch("/election",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING]), electionController.update);
 
-router.delete("/election",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.FINISHED])], electionController.delete);
+router.delete("/election",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.FINISHED, ElectionStatus.CANCELLED])], electionController.delete);
 
 router.patch("/election/status",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], electionController.status);
 
-router.patch("/election/update-logo",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], electionController.updateLogo);
+router.patch("/election/update-logo",  [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], electionController.updateLogo);
 
 
 
 
-router.post("/tps", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], tpsController.create);
+router.post("/tps", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], tpsController.create);
 
 router.get("/tps", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], tpsController.findAll);
 
@@ -60,9 +60,9 @@ router.get("/tps/:id/admin", [authMiddleware, electionMiddleware, aclMiddleware(
 
 router.get("/tps/petugas", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS])], tpsController.findByPetugas);
 
-router.patch("/tps/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], tpsController.update);
+router.patch("/tps/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], tpsController.update);
 
-router.delete("/tps/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], tpsController.delete);
+router.delete("/tps/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], tpsController.delete);
 
 
 
@@ -73,15 +73,15 @@ router.delete("/media/delete-single", [authMiddleware, aclMiddleware([UserRole.S
 
 
 
-router.post("/petugas", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], petugasController.create);
+router.post("/petugas", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], petugasController.create);
 
 router.get("/petugas", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], petugasController.findAll);
 
 router.get("/petugas/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN])], petugasController.findOne);
 
-router.patch("/petugas/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], petugasController.update);
+router.patch("/petugas/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], petugasController.update);
 
-router.delete("/petugas/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], petugasController.delete);
+router.delete("/petugas/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], petugasController.delete);
 
 router.patch("/petugas/:id/non-active", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING, ElectionStatus.ONGOING])], petugasController.nonActive);
 
@@ -90,22 +90,22 @@ router.patch("/petugas/:id/active", [authMiddleware, electionMiddleware, aclMidd
 
 
 
-router.post("/candidate", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], candidateController.create);
+router.post("/candidate", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]), electionStatusMiddleware([ElectionStatus.DRAFT])], candidateController.create);
 
 router.get("/candidate", [authMiddleware, electionMiddleware], candidateController.findAll);
 
 router.get("/candidate/:id", [authMiddleware, electionMiddleware], candidateController.findOne);
 
-router.patch("/candidate/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]),  electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], candidateController.update);
+router.patch("/candidate/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]),  electionStatusMiddleware([ElectionStatus.DRAFT])], candidateController.update);
 
-router.delete("/candidate/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]),  electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], candidateController.delete);
-
-
+router.delete("/candidate/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.SUPER_ADMIN]),  electionStatusMiddleware([ElectionStatus.DRAFT])], candidateController.delete);
 
 
 
 
-router.post("/voter", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], voterController.create);
+
+
+router.post("/voter", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT])], voterController.create);
 
 router.get("/all-voter", [authMiddleware, electionMiddleware], voterController.findAll);
 
@@ -113,7 +113,7 @@ router.get("/voter", [authMiddleware, electionMiddleware, aclMiddleware([UserRol
 
 router.get("/voter/:id", [authMiddleware, electionMiddleware], voterController.findOne);
 
-router.patch("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], voterController.update);
+router.patch("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT])], voterController.update);
 
 router.patch("/voter/:id/present", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voterController.present);
 
@@ -121,7 +121,7 @@ router.patch("/voter/:id/no-present", [authMiddleware, electionMiddleware, aclMi
 
 router.patch("/voter/:id/voted", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.ONGOING])], voterController.voted);
 
-router.delete("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT, ElectionStatus.UPCOMING])], voterController.delete);
+router.delete("/voter/:id", [authMiddleware, electionMiddleware, aclMiddleware([UserRole.PETUGAS]), electionStatusMiddleware([ElectionStatus.DRAFT])], voterController.delete);
 
 
 

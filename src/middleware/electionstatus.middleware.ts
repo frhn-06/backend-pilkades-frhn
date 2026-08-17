@@ -7,18 +7,18 @@ import { ElectionStatus } from "@prisma/client"
 
 const electionStatusMiddleware = (status: ElectionStatus[]) => {
     return async (req:IReqUser, res:Response, next: NextFunction) => {
-        // const electionId = req.user!.electionId;
-        // if(electionId === null) return response.error(res, false, "Eleksi tidak ditemukan/ belum dibuat")
+        const electionId = req.user!.electionId;
+        if(electionId === null) return response.error(res, false, "Eleksi tidak ditemukan/ belum dibuat")
 
-        // const election = await prisma.election.findUnique({
-        //     where: {
-        //         id: electionId
-        //     }
-        // })
+        const election = await prisma.election.findUnique({
+            where: {
+                id: electionId
+            }
+        })
 
-        // if(!election) return response.notFound(res, "Eleksi tidak ditemukan");
+        if(!election) return response.notFound(res, "Eleksi tidak ditemukan");
 
-        // if(!status.includes(election?.status)) return response.error(res, false, "Election belum memasuki tahap yang mengizinkan aksi ini.");
+        if(!status.includes(election?.status)) return response.error(res, false, "Status Election tidak mengizinkan untuk melakukan aksi ini.");
 
         next();
     }
