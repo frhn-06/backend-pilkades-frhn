@@ -84,7 +84,7 @@ const reportService = {
                     countVotersPresent,
                     countVotersAbsen: countVoters - countVotersPresent,
                     countVotersVote,
-                    countVotersNotVote: countVotersPresent - countVotersVote,
+                    countVotersNotVote: countVoters - countVotersVote,
                     parcitipantsRate: countVotersPresent === 0 ? 0 : Number((countVotersPresent * 100 / countVoters).toFixed(1))
                 },
                 exportAt: new Date()
